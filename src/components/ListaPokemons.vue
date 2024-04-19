@@ -1,5 +1,7 @@
 <script setup>
+
 const pokemon = defineProps(["name", "urlBaseImagem"]);
+
 </script>
 
 <template>

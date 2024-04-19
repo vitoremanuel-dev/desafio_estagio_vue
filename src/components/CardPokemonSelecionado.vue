@@ -148,11 +148,11 @@ const pokemonImages = [
             </section>
             <section class="row mt-2">
               <strong>Game indices:</strong>
-              <span>{{ pokemon.indices }}</span>
+              <span>{{ pokemon.indices ? pokemon.indices : "Não possui" }}</span>
             </section>
             <section class="row mt-2 mb-2">
               <strong>Evoluções:</strong>
-              <span>{{ pokemon.evolucoes }}</span>
+              <span>{{ pokemon.evolucoes ? pokemon.evolucoes : "Não possui"}}</span>
             </section>
           </div>
         </div>
@@ -163,14 +163,6 @@ const pokemonImages = [
 </template>
 
 <style scoped>
-.btn {
-  box-shadow: 1px 1px 10px 1px black;
-  width: auto;
-  border: none;
-  align-items: center;
-  background: rgb(124, 50, 50) 100%;
-}
-
 .cardPokemonSelecionado {
   box-shadow: 1px 1px 20px 1px black;
   height: 80vh;
