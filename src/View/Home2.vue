@@ -1,45 +1,79 @@
 <script setup>
-import { onMounted, reactive, ref, computed } from "vue";
+import { onMounted, reactive, ref, computed, watchEffect, watch} from "vue";
 import ListaPokemons from "../components/ListaPokemons.vue";
 import CardPokemonSelecionado from "../components/CardPokemonSelecionado.vue";
-
 
 let urlBaseImagem = ref(
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"
 );
-let pokemons = reactive(ref());
+let pokemons = ref([]);
 let buscarPokemon = ref("");
 let pokemonSelecionado = reactive(ref());
-let loading = ref(false)
-let limit = ref(40)
-let listaDePokemons = ref(null)
+let loading = ref(false);
+let tipoSelecionado = ref(null);
+const limite = 30;
+const offset = ref(0);
 
-let infinityScroll = () => {
-  const pokemons_list = listaDePokemons.value
-  pokemons_list.addEventListener('scroll', () => {
-        if (pokemons_list.scrollTop + pokemons_list.clientHeight >= pokemons_list.scrollHeight) {
-          console.log('oi');
-        }
-      });
-}
-
-
-
-let fetchPokemonsScroll  = async() =>  {
-  limit.value += 10;
-  await load();
-}
-
-let load = async () => {
-  fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit.value}&offset=0`)
-    .then((res) => res.json())
-    .then((res) => (pokemons.value = res.results));
+const toggleTipo = (tipoId) => {
+  if (tipoSelecionado.value === tipoId) {
+    tipoSelecionado.value = null;
+  } else {
+    tipoSelecionado.value = tipoId;
+  }
 };
 
-onMounted(async () => {
-  await load();
-  infinityScroll();
+const fetchPokmeonsTipos = async (tipoId) => {
+  loading.value = true;
+  try {
+    if (tipoId === null) {
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon?limit=${limite}&offset=${offset.value}`
+      );
+      const data = await response.json();
+      pokemons.value = data.results;
+    } else {
+      const response = await fetch(`https://pokeapi.co/api/v2/type/${tipoId}/`);
+      const data = await response.json();
+      pokemons.value = data.pokemon.map((p) => p.pokemon);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao buscar os pokémons por tipo.");
+  } finally {
+    loading.value = false;
+  }
+};
+
+watchEffect(() => {
+  fetchPokmeonsTipos(tipoSelecionado.value);
 });
+
+const fetchPokemons = async () => {
+  fetch(
+    `https://pokeapi.co/api/v2/pokemon?limit=${limite}&offset=${offset.value}`
+  )
+    .then((res) => res.json())
+    .then((res) => (pokemons.value = [...pokemons.value, res.results]));
+};
+onMounted(async () => {
+  fetchPokemons();
+});
+
+const onScroll = (elemento) => {
+  const lista = elemento.querySelector(".infinityScroll");
+  const scrollHeight = lista.scrollHeight;
+  const scrollTop = lista.scrollTop;
+  const clientHeight = lista.clientHeight;
+  console.log({
+    scrollHeight,
+    scrollTop,
+    clientHeight,
+  });
+  if (scrollHeight - Math.floor(scrollTop) === clientHeight) {
+    offset.value += limite;
+    fetchPokemons();
+  }
+};
 
 const pokemonsFiltrados = computed(() => {
   if (pokemons.value && buscarPokemon.value) {
@@ -56,7 +90,7 @@ const pokemonsFiltrados = computed(() => {
 });
 
 const getPokemonId = (url) => {
-  const parts = url.split("/");
+  const parts = url?.split("/");
   return parts[parts.length - 2];
 };
 
@@ -133,52 +167,13 @@ const parseEvolutions = (chain) => {
 
   return evolutions.slice(1);
 };
-
-
-
-/* 
-fetch(`https://pokeapi.co/api/v2/pokemon-species/1`)
-  .then((response) => response.json())
-  .then((data) => {
-    const nameTranslate = data.names.map((entry) => entry.name);
-    const typesTranslate = data.genera.map((entry) => entry.genus);
-
-    console.log(
-      "Nomes:",
-      nameTranslate,
-      typesTranslate
-    );
-  })
-  .catch((error) => {
-    console.error("Ocorreu um erro ao processar a solicitação:", error);
-  });
-*/
-
-/* 
-fetch(`https://pokeapi.co/api/v2/move/1`)
-  .then((response) => response.json())
-  .then((data) => {
-    const movesTranslate = data.names.map((entry) => entry.name);
-
-    console.log(
-      "Nomes:",
-      movesTranslate,
-     
-    );
-  })
-  .catch((error) => {
-    console.error("Ocorreu um erro ao processar a solicitação:", error);
-  });
-*/
-
-// https://pokeapi.co/api/v2/type
 </script>
 
 <template>
   <main>
     <div class="container">
       <div class="row mt-4">
-        <div class="col-sm-12 col-md-4">
+        <div class="col-sm-12 col-md-5">
           <CardPokemonSelecionado
             :name="pokemonSelecionado?.name"
             :id="pokemonSelecionado?.id"
@@ -203,7 +198,11 @@ fetch(`https://pokeapi.co/api/v2/move/1`)
         </div>
 
         <div class="col-sm-12 col-md-7">
-          <div class="card card-list teste">
+          <div
+            class="card card-list fundo-lista infinityScroll"
+            @scroll="onScroll($el)"
+            style="overflow-x: auto"
+          >
             <div class="card-body row">
               <div class="mb-3">
                 <label hidden for="buscarPokemon" class="form-label"
@@ -218,24 +217,146 @@ fetch(`https://pokeapi.co/api/v2/move/1`)
                     placeholder="Pesquisar por nome ou ID"
                   />
                 </div>
+                <div class="" role="group" aria-label="TiposDePokemon">
+                  <button
+                    @click="toggleTipo(1)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 1 }"
+                  >
+                    Normal
+                  </button>
+                  <button
+                    @click="toggleTipo(2)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 2 }"
+                  >
+                    Fighting
+                  </button>
+                  <button
+                    @click="toggleTipo(3)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 3 }"
+                  >
+                    Flying
+                  </button>
+                  <button
+                    @click="toggleTipo(4)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 4 }"
+                  >
+                    Poison
+                  </button>
+                  <button
+                    @click="toggleTipo(5)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 5 }"
+                  >
+                    Ground
+                  </button>
+                  <button
+                    @click="toggleTipo(6)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 6 }"
+                  >
+                    Rock
+                  </button>
+                  <button
+                    @click="toggleTipo(7)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 7 }"
+                  >
+                    Bug
+                  </button>
+                  <button
+                    @click="toggleTipo(8)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 8 }"
+                  >
+                    Ghost
+                  </button>
+                  <button
+                    @click="toggleTipo(9)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 9 }"
+                  >
+                    Steel
+                  </button>
+                  <button
+                    @click="toggleTipo(10)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 10 }"
+                  >
+                    Fire
+                  </button>
+                  <button
+                    @click="toggleTipo(11)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 11 }"
+                  >
+                    Water
+                  </button>
+                  <button
+                    @click="toggleTipo(12)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 12 }"
+                  >
+                    Grass
+                  </button>
+                  <button
+                    @click="toggleTipo(13)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 13 }"
+                  >
+                    Electric
+                  </button>
+                  <button
+                    @click="toggleTipo(14)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 14 }"
+                  >
+                    Psychic
+                  </button>
+                  <button
+                    @click="toggleTipo(15)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 15 }"
+                  >
+                    Ice
+                  </button>
+                  <button
+                    @click="toggleTipo(16)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 16 }"
+                  >
+                    Dragon
+                  </button>
+                  <button
+                    @click="toggleTipo(17)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 17 }"
+                  >
+                    Dark
+                  </button>
+                  <button
+                    @click="toggleTipo(18)"
+                    class="btn btn-primary mt-3 tipo-pokemon"
+                    :class="{ active: tipoSelecionado === 18 }"
+                  >
+                    Fairy
+                  </button>
+                </div>
               </div>
-              <div ref="listaDePokemons">
-                <div v-for="pokemon in pokemonsFiltrados" :key="pokemon.name">
-              {{ pokemon }}
-              </div>
-              </div>             
+              <ListaPokemons
+                v-for="pokemon in pokemonsFiltrados"
+                :key="pokemon.name"
+                :name="pokemon.name"
+                :urlBaseImagem="
+                  urlBaseImagem + pokemon.url.split('/')[6] + '.png'
+                "
+                @click="selecionarPokemon(pokemon)"
+              />
             </div>
-            <div ref="sentinel"></div>
           </div>
-          <ListaPokemons
-                  v-for="pokemon in pokemonsFiltrados"
-                  :key="pokemon.name"
-                  :name="pokemon.name"
-                  :urlBaseImagem="
-                    urlBaseImagem + pokemon.url.split('/')[6] + '.png'
-                  "
-                  @click="selecionarPokemon(pokemon)"
-                />
         </div>
       </div>
     </div>
@@ -243,11 +364,23 @@ fetch(`https://pokeapi.co/api/v2/move/1`)
 </template>
 
 <style scoped>
-.teste {
+.tipo-pokemon {
+  margin: 2px;
+  background: rgb(0, 91, 140);
+}
+
+.tipo-pokemon:hover {
+  background: rgba(120, 102, 188, 1);
+}
+
+.active {
+  background: rgba(120, 102, 188, 1);
+}
+
+.fundo-lista {
   background: rgb(0, 48, 73);
 }
 .card-list {
-  color: white;
   max-height: 80vh;
   overflow-y: scroll;
   overflow-x: hidden;

@@ -12,11 +12,6 @@ let pokemonSelecionado = reactive(ref());
 let loading = ref(false);
 let tipoSelecionado = ref(null);
 
-/* 
-const selecionarTipo = (tipoId) => {
-  tipoSelecionado.value = tipoId;
-};
-*/
 const toggleTipo = (tipoId) => {
   if (tipoSelecionado.value === tipoId) {
     tipoSelecionado.value = null;
@@ -30,7 +25,7 @@ const fetchPokemonsByType = async (tipoId) => {
   try {
     if (tipoId === null) {
       const response = await fetch(
-        "https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0"
+        `https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0`
       );
       const data = await response.json();
       pokemons.value = data.results;
@@ -52,7 +47,7 @@ watchEffect(() => {
 });
 
 onMounted(async () => {
-  fetch(`https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0`)
+  fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=0`)
     .then((res) => res.json())
     .then((res) => (pokemons.value = res.results));
 });
@@ -181,12 +176,11 @@ const parseEvolutions = (chain) => {
 
         <div class="col-sm-12 col-md-7">
           <div class="card card-list fundo-lista">
-            <div class="card-body row">
+            <div class="card-body row infinit">
               <div class="mb-3">
                 <label hidden for="buscarPokemon" class="form-label"
                   >Pesquisar</label
                 >
-
                 <div class="input-group">
                   <input
                     v-model="buscarPokemon"
@@ -325,8 +319,6 @@ const parseEvolutions = (chain) => {
                   </button>
                 </div>
               </div>
-
-              <div class="lista-pokemons" v-in></div>
               <ListaPokemons
                 v-for="pokemon in pokemonsFiltrados"
                 :key="pokemon.name"

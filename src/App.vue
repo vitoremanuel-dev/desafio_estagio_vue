@@ -47,7 +47,7 @@
   </div>
 
   <footer class="footer-custom">
-    &copy Desafio Estágio Frontend - Vítor Emanuel Pacheco de Sousa
+    <p>&copy Desafio Estágio Frontend - Vítor Emanuel Pacheco de Sousa</p>
   </footer>
   
 </template>

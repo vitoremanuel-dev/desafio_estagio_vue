@@ -10,10 +10,13 @@ import FotoPerfil from "../assets/foto-perfil.jpg";
           <img :src="FotoPerfil" alt="Foto de perfil" class="m-5 foto-perfil" />
           <div class="col">
             <div class="text">
-              <h1>
-                Vítor Emanuel Pacehco de Sousa
-              </h1>
-              <hr>
+              <h1>Vítor Emanuel Pacehco de Sousa</h1>
+              <hr />
+              <p>
+                Oi, me chamo Vítor Emanuel, sou piauiense de Teresina, bacharel
+                em Direito e atualmente curso Análise e Desenvolvimento de
+                Sistemas
+              </p>
             </div>
           </div>
         </div>
@@ -24,7 +27,10 @@ import FotoPerfil from "../assets/foto-perfil.jpg";
 
 <style>
 .text {
-  margin-top: 80px;
+  background-color: rgba(255, 255, 255, 0.236);
+  border-radius: 20px;
+  margin: 50px;
+  padding: 20px;
   height: 60vh;
   text-align: center;
 }
