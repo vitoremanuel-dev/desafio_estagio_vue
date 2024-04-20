@@ -184,7 +184,7 @@ const pokemonImages = [
 }
 .id {
   text-align: center;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(73, 18, 18, 0.6);
 }
 
 @media (max-width: 768px) {
@@ -196,6 +196,28 @@ const pokemonImages = [
 
   .cardPokemonSelecionado img {
     height: 150px;
+  }
+}
+
+@media (max-width: 992px) {
+  .cardPokemonSelecionado {
+    height: 80h;
+    margin: 0 auto 10px auto;
+  }
+
+  .cardPokemonSelecionado img {
+    height: 150px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .cardPokemonSelecionado {
+    height: 80h;
+    margin: 0 auto 10px auto;
+  }
+
+  .cardPokemonSelecionado img {
+    height: 200px;
   }
 }
 </style>

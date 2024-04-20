@@ -35,6 +35,6 @@ const pokemon = defineProps(["name", "urlBaseImagem"]);
 }
 
 .cardListaPokemon img:hover {
-  padding: 0.1rem;
+  padding: .1rem;
 }
 </style>
