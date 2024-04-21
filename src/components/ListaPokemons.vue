@@ -1,7 +1,5 @@
 <script setup>
-
 const pokemon = defineProps(["name", "urlBaseImagem"]);
-
 </script>
 
 <template>
@@ -35,6 +33,6 @@ const pokemon = defineProps(["name", "urlBaseImagem"]);
 }
 
 .cardListaPokemon img:hover {
-  padding: .1rem;
+  padding: 0.1rem;
 }
 </style>

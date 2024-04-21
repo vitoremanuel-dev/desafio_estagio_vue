@@ -13,6 +13,7 @@ let pokemonSelecionado = reactive(ref());
 let loading = ref(false);
 let tipoSelecionado = ref(null);
 
+// Exibir pokémons somente pelo tipo marcado
 const toggleTipo = (tipoId) => {
   if (tipoSelecionado.value === tipoId) {
     tipoSelecionado.value = null;
@@ -21,6 +22,7 @@ const toggleTipo = (tipoId) => {
   }
 };
 
+// Buscar pokémons somente com base no tipo selecionado
 const fetchPokemonsByType = async (tipoId) => {
   loading.value = true;
   try {
@@ -47,31 +49,37 @@ watchEffect(() => {
   fetchPokemonsByType(tipoSelecionado.value);
 });
 
+// Requisição à API
 onMounted(async () => {
   fetch(`https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0`)
     .then((res) => res.json())
     .then((res) => (pokemons.value = res.results));
 });
 
+// Flitrar pokémons com base no nome ou ID
 const pokemonsFiltrados = computed(() => {
   if (pokemons.value && buscarPokemon.value) {
-    const searchTerm = buscarPokemon.value.toLowerCase();
+    const pokemonPesquisado = buscarPokemon.value.toLowerCase();
     return pokemons.value.filter((pokemon) => {
       const pokemonId = getPokemonId(pokemon.url);
       return (
-        (!isNaN(searchTerm) && pokemonId.toString() === searchTerm) ||
-        (isNaN(searchTerm) && pokemon.name.toLowerCase().includes(searchTerm))
+        (!isNaN(pokemonPesquisado) &&
+          pokemonId.toString() === pokemonPesquisado) ||
+        (isNaN(pokemonPesquisado) &&
+          pokemon.name.toLowerCase().includes(pokemonPesquisado))
       );
     });
   }
   return pokemons.value;
 });
 
+// Obter ID do pokémon
 const getPokemonId = (url) => {
   const parts = url.split("/");
   return parts[parts.length - 2];
 };
 
+// Função para exibir detalhes do Pokémon
 const selecionarPokemon = async (pokemon) => {
   loading.value = true;
   try {
@@ -94,7 +102,7 @@ const selecionarPokemon = async (pokemon) => {
     const evolutionChainResponse = await fetch(evolutionChainUrl);
     const evolutionChainData = await evolutionChainResponse.json();
 
-    const evolutions = parseEvolutions(evolutionChainData.chain);
+    const evolutions = analisarEvolucoes(evolutionChainData.chain);
 
     pokemonSelecionado.value.evolutions = evolutions.map(
       (evolution) => evolution.name
@@ -126,21 +134,22 @@ const selecionarPokemon = async (pokemon) => {
   }
 };
 
-const parseEvolutions = (chain) => {
+// Exibir cadeia de evolução do Pokémon
+const analisarEvolucoes = (chain) => {
   const evolutions = [];
 
-  const addEvolutionsRecursive = (stage) => {
+  const adicionarEvolucoes = (stage) => {
     evolutions.push({ name: stage.species.name });
 
     if (stage.evolves_to.length > 0) {
       stage.evolves_to.forEach((evolution) => {
-        addEvolutionsRecursive(evolution);
+        adicionarEvolucoes(evolution);
       });
     }
   };
 
   if (chain && chain.species) {
-    addEvolutionsRecursive(chain);
+    adicionarEvolucoes(chain);
   }
 
   return evolutions.slice(1);
@@ -174,7 +183,6 @@ const parseEvolutions = (chain) => {
             :evolucoes="pokemonSelecionado?.evolutions"
           />
         </div>
-
         <div class="col-sm-12 col-md-7">
           <div class="card card-list fundo-lista">
             <div class="card-body row infinit">
@@ -182,20 +190,21 @@ const parseEvolutions = (chain) => {
                 <label hidden for="buscarPokemon" class="form-label"
                   >Pesquisar</label
                 >
-                <div class="input-group">
-                  <input
-                    v-model="buscarPokemon"
-                    type="text"
-                    class="form-control"
-                    id="buscarPokemon"
-                    :placeholder="$t('listaPokemons.pesquisa')"
-                  />
-                </div>
+
+                <input
+                  v-model="buscarPokemon"
+                  type="text"
+                  class="form-control"
+                  id="buscarPokemon"
+                  :placeholder="$t('listaPokemons.pesquisa')"
+                />
+
                 <FiltroEspecie
                   :tipoSelecionado="tipoSelecionado"
                   :toggleTipo="toggleTipo"
                 />
               </div>
+
               <ListaPokemons
                 v-for="pokemon in pokemonsFiltrados"
                 :key="pokemon.name"

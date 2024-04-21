@@ -1,59 +1,57 @@
-<script setup></script>
+<script setup>
+import SelecionarIdioma from "./components/SelecionarIdioma.vue";
+</script>
 
 <template>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
-    <div class="container-fluid">
-      <router-link class="navbar-brand" to="/">
-        <img
-          src="https://cdn-icons-png.flaticon.com/128/362/362001.png"
-          alt="PokeMainô"
-          width="30"
-          height="24"
-        />
-        PokeMainô
-      </router-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <router-link class="nav-link" aria-current="page" to="/"
-              >Home</router-link
-            >
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/sobre">Sobre</router-link>
-          </li>
-        </ul>
+  <div>
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+      <div class="container-fluid">
+        <router-link class="navbar-brand" to="/">
+          <img
+            src="https://cdn-icons-png.flaticon.com/128/362/362001.png"
+            alt="PokeMainô"
+            width="30"
+            height="24"
+          />
+          PokeMainô
+        </router-link>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <router-link class="nav-link" aria-current="page" to="/">{{
+                $t("navbar.home")
+              }}</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/sobre">{{
+                $t("navbar.sobre")
+              }}</router-link>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div class="selecionarIdioma">
-      <span @click="setLocale('pt_BR')" class="idioma">PT</span>
-      <span class="separador"> | </span>
-      <span @click="setLocale('en')" class="idioma">EN</span>
-      <span class="separador"> | </span>
-      <span @click="setLocale('es')" class="idioma">ES</span>
-    </div>
-  </nav>
+      <SelecionarIdioma />
+    </nav>
 
-  <!-- Conteúdo-->
-  <div class="main">
-    <router-view></router-view>
+    <div class="main">
+      <router-view></router-view>
+    </div>
+
+    <footer>
+      &copy; Desafio Estágio Frontend - Vítor Emanuel Pacheco de Sousa
+    </footer>
   </div>
-
-  <footer>
-    &copy Desafio Estágio Frontend - Vítor Emanuel Pacheco de Sousa
-  </footer>
 </template>
 
 <style>

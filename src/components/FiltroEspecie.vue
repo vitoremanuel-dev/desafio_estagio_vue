@@ -57,6 +57,6 @@ const toggleTipo = (tipoId) => {
 }
 
 .tipo-pokemon.active {
-    background: rgb(96, 69, 192);
+  background: rgb(96, 69, 192);
 }
 </style>

@@ -7,5 +7,9 @@ export const en = {
     },
     listaPokemons: {
         pesquisa: 'Search by name or ID'
+    },
+    navbar: {
+        home: 'Home',
+        sobre: 'About'
     }
 }

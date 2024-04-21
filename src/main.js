@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n'
 import App from './App.vue';
-import router from './Router';
+import router from '../src/router/index.js';
 
 import { pt_BR } from '../src/locales/pt_BR.js'
 import { en } from '../src/locales/en.js'

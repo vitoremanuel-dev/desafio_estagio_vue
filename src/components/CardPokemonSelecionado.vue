@@ -1,6 +1,4 @@
 <script setup>
-import "animate.css";
-
 const pokemon = defineProps([
   "name",
   "id",
@@ -29,13 +27,10 @@ const pokemonImages = [
   pokemon.imgFrontShiny_female,
   pokemon.imgBackShiny_female,
 ];
-
 </script>
 
 <template>
-  <div
-    class="card cardPokemonSelecionado p-2"
-  >
+  <div class="card cardPokemonSelecionado p-2">
     <div
       id="carouselExampleIndicators"
       class="carousel slide"
@@ -135,7 +130,11 @@ const pokemonImages = [
 
     <div class="card-body">
       <h5 class="card-title text-center">
-        {{ pokemon.name ? pokemon.name.toUpperCase() : $t('cardSelecionado.selecionar') }}
+        {{
+          pokemon.name
+            ? pokemon.name.toUpperCase()
+            : $t("cardSelecionado.selecionar")
+        }}
       </h5>
       <p class="text-center tipos">{{ pokemon.tipos }}</p>
       <hr />
@@ -143,22 +142,26 @@ const pokemonImages = [
         <div class="d-none d-md-block">
           <div class="row text-center info" v-if="pokemon.name">
             <section class="row mt-2">
-              <strong>{{ $t('cardSelecionado.ataques') }}</strong>
+              <strong>{{ $t("cardSelecionado.ataques") }}</strong>
               <span>{{ pokemon.abilities }}</span>
             </section>
             <section class="row mt-2">
-              <strong>{{ $t('cardSelecionado.gameIndices') }}</strong>
-              <span>{{ pokemon.indices ? pokemon.indices : "Não possui" }}</span>
+              <strong>{{ $t("cardSelecionado.gameIndices") }}</strong>
+              <span>{{
+                pokemon.indices ? pokemon.indices : "Não possui"
+              }}</span>
             </section>
             <section class="row mt-2 mb-2">
-              <strong>{{ $t('cardSelecionado.evolutions') }}</strong>
-              <span>{{ pokemon.evolucoes ? pokemon.evolucoes : "Não possui"}}</span>
+              <strong>{{ $t("cardSelecionado.evolutions") }}</strong>
+              <span>{{
+                pokemon.evolucoes ? pokemon.evolucoes : "Não possui"
+              }}</span>
             </section>
           </div>
         </div>
       </div>
     </div>
-    <span class="id pb-4" v-if="pokemon.name">{{ '#' + pokemon.id  }}</span>
+    <span class="id pb-4" v-if="pokemon.name">{{ "#" + pokemon.id }}</span>
   </div>
 </template>
 
@@ -175,7 +178,7 @@ const pokemonImages = [
 }
 
 .cardPokemonSelecionado img {
-  height: 250px; /* Aqui tava em 250px*/ 
+  height: 250px; /* Aqui tava em 250px*/
 }
 
 .info {
