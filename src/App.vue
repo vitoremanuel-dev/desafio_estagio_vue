@@ -1,6 +1,4 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
   <!-- Navbar -->
@@ -39,6 +37,13 @@
         </ul>
       </div>
     </div>
+    <div class="selecionarIdioma">
+      <span @click="setLocale('pt_BR')" class="idioma">PT</span>
+      <span class="separador"> | </span>
+      <span @click="setLocale('en')" class="idioma">EN</span>
+      <span class="separador"> | </span>
+      <span @click="setLocale('es')" class="idioma">ES</span>
+    </div>
   </nav>
 
   <!-- Conteúdo-->
@@ -46,10 +51,9 @@
     <router-view></router-view>
   </div>
 
-  <footer class="footer-custom">
-    <p>&copy Desafio Estágio Frontend - Vítor Emanuel Pacheco de Sousa</p>
+  <footer>
+    &copy Desafio Estágio Frontend - Vítor Emanuel Pacheco de Sousa
   </footer>
-  
 </template>
 
 <style>
@@ -60,10 +64,28 @@ body {
   background-blend-mode: darken;
 }
 
+.selecionarIdioma {
+  background: rgb(0, 91, 140);
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  margin-right: 20px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.idioma:hover {
+  color: rgb(0, 67, 104);
+}
+
+.separador {
+  margin: 0 5px;
+}
+
 .custom-navbar {
   background-color: rgb(0, 48, 73);
 }
-.footer-custom {
+footer {
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -76,3 +98,13 @@ body {
   color: white;
 }
 </style>
+
+<script>
+export default {
+  methods: {
+    setLocale(locale) {
+      this.$i18n.locale = locale;
+    },
+  },
+};
+</script>

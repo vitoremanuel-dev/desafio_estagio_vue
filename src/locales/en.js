@@ -1,10 +1,11 @@
 export const en = {
-    pokemonSelecionado : {
-        ataques: 'Attacks',
-        gameIndice: 'Game Indexes',
-        evolucoes: 'Evolutions'
+    cardSelecionado: {
+        selecionar: 'Select a pokemon',
+        ataques: 'Attacks:',
+        gameIndices: 'Game indices:',
+        evolutions: 'Evolutions:',
     },
-    listaDePokemons: {
+    listaPokemons: {
         pesquisa: 'Search by name or ID'
     }
-};
+}

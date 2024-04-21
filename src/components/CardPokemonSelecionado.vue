@@ -135,7 +135,7 @@ const pokemonImages = [
 
     <div class="card-body">
       <h5 class="card-title text-center">
-        {{ pokemon.name ? pokemon.name.toUpperCase() : "Selecione um pokemón" }}
+        {{ pokemon.name ? pokemon.name.toUpperCase() : $t('cardSelecionado.selecionar') }}
       </h5>
       <p class="text-center tipos">{{ pokemon.tipos }}</p>
       <hr />
@@ -143,15 +143,15 @@ const pokemonImages = [
         <div class="d-none d-md-block">
           <div class="row text-center info" v-if="pokemon.name">
             <section class="row mt-2">
-              <strong>Ataques:</strong>
+              <strong>{{ $t('cardSelecionado.ataques') }}</strong>
               <span>{{ pokemon.abilities }}</span>
             </section>
             <section class="row mt-2">
-              <strong>Game indices:</strong>
+              <strong>{{ $t('cardSelecionado.gameIndices') }}</strong>
               <span>{{ pokemon.indices ? pokemon.indices : "Não possui" }}</span>
             </section>
             <section class="row mt-2 mb-2">
-              <strong>Evoluções:</strong>
+              <strong>{{ $t('cardSelecionado.evolutions') }}</strong>
               <span>{{ pokemon.evolucoes ? pokemon.evolucoes : "Não possui"}}</span>
             </section>
           </div>
