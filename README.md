@@ -1,7 +1,15 @@
-# Vue 3 + Vite
+# Seja bem-vindo à minha Pokédex
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Neste projeto, realizo o consumo da pokeapi.co e criação de uma Pokédex com filtro para busca por nome, ID ou espécie dos pokémons. Também conta com suporte para Inglês e Espanhol (será necessário clicar no idioma desejado e selecionar novamente o pokémon para carregar)
 
-## Recommended IDE Setup
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+## Vercel: https://desafio-estagio-maino.vercel.app/
+
+
+![Texto alternativo](./src/assets/pokedex.png)
+
+
+
+## Stack utilizada
+
+**Front-end:** HTML, CSS, Javascript, Vue.js
