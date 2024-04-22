@@ -12,10 +12,13 @@ import FotoPerfil from "../assets/foto-perfil.jpg";
             <div class="text">
               <h1>Vítor Emanuel Pacehco de Sousa</h1>
               <hr />
+              <br>
               <p>
                 Oi, me chamo Vítor Emanuel, sou piauiense de Teresina, bacharel
-                em Direito e atualmente curso Análise e Desenvolvimento de
-                Sistemas
+                em Direito e atualmente graduando em Análise e Desenvolvimento de
+                Sistemas. Iniciei meus estudos no mundo do TI em Fevereiro de
+                2023 e hoje busco oportunidade de ingressar no mercado de
+                trabalho. Meus principais hobbies são assistir filmes e jogar vôlei.
               </p>
             </div>
           </div>
