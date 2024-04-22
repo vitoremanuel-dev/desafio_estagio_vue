@@ -178,7 +178,7 @@ const pokemonImages = [
 }
 
 .cardPokemonSelecionado img {
-  height: 250px; /* Aqui tava em 250px*/
+  height: 250px;
 }
 
 .info {

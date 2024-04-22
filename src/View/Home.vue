@@ -174,6 +174,10 @@ const analisarEvolucoes = (chain) => {
 
   return evolutions.slice(1);
 };
+
+function changeLanguage(atualizarIdioma) {
+  idioma.value = atualizarIdioma;
+}
 </script>
 
 <template>
@@ -181,6 +185,21 @@ const analisarEvolucoes = (chain) => {
     <div class="container">
       <div class="row mt-4">
         <div class="col-sm-12 col-md-5">
+          <div class="idiomaCard">
+            <img
+              src="https://static.mundoeducacao.uol.com.br/mundoeducacao/2022/05/bandeira-estados-unidos.jpg"
+              alt="Bandeira dos Estados Unidos"
+              @click="changeLanguage('en')"
+              class="idioma"
+            />
+            <span class="separador"> | </span>
+            <img
+              src="https://static.mundoeducacao.uol.com.br/mundoeducacao/2022/01/bandeira-da-espanha.jpg"
+              alt="Bandeira da Espanha"
+              @click="changeLanguage('es')"
+              class="idioma"
+            />
+          </div>
           <CardPokemonSelecionado
             :name="pokemonSelecionado?.name"
             :id="pokemonSelecionado?.id"
@@ -243,6 +262,15 @@ const analisarEvolucoes = (chain) => {
 </template>
 
 <style scoped>
+.idiomaCard{
+margin-bottom: 4px;
+cursor: pointer;
+}
+
+.separador {
+  margin: 0 10px;
+}
+
 .buttons {
   margin-left: 160px;
 }

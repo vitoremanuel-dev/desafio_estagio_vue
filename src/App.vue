@@ -90,7 +90,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 56px;
+  height: 30px;
   background-color: rgb(0, 48, 73);
   font-weight: bold;
   color: white;
