@@ -12,6 +12,7 @@ let buscarPokemon = ref("");
 let pokemonSelecionado = reactive(ref());
 let loading = ref(false);
 let tipoSelecionado = ref(null);
+let idioma = ref("en");
 
 // Exibir pokémons somente pelo tipo marcado
 const toggleTipo = (tipoId) => {
@@ -97,6 +98,13 @@ const selecionarPokemon = async (pokemon) => {
     const speciesResponse = await fetch(data.species.url);
     const speciesData = await speciesResponse.json();
 
+    const typesUrls = data.types.map((type) => type.type.url);
+    const typesResponses = await Promise.all(
+      typesUrls.map((url) => fetch(url))
+    );
+    const typesData = await Promise.all(
+      typesResponses.map((response) => response.json())
+    );
     const evolutionChainUrl = speciesData.evolution_chain.url;
 
     const evolutionChainResponse = await fetch(evolutionChainUrl);
@@ -111,8 +119,17 @@ const selecionarPokemon = async (pokemon) => {
     pokemonSelecionado.value.evolutions =
       pokemonSelecionado.value.evolutions.join(", ");
 
-    pokemonSelecionado.value.abilities = data.abilities
-      .map((item) => item.ability.name)
+    pokemonSelecionado.value.abilities = await Promise.all(
+      data.abilities.map(async (item) => {
+        const response = await fetch(item.ability.url);
+        const abilityData = await response.json();
+        return abilityData.names.find(
+          (name) => name.language.name === idioma.value
+        )?.name;
+      })
+    );
+
+    pokemonSelecionado.value.abilities = pokemonSelecionado.value.abilities
       .filter(Boolean)
       .join(", ");
 
@@ -122,8 +139,11 @@ const selecionarPokemon = async (pokemon) => {
       .filter(Boolean)
       .join(", ");
 
-    pokemonSelecionado.value.types = data.types
-      .map((item) => item.type.name)
+    pokemonSelecionado.value.types = typesData
+      .map(
+        (type) =>
+          type.names.find((name) => name.language.name === idioma.value)?.name
+      )
       .filter(Boolean)
       .join(", ");
   } catch (error) {
@@ -223,6 +243,13 @@ const analisarEvolucoes = (chain) => {
 </template>
 
 <style scoped>
+.buttons {
+  margin-left: 160px;
+}
+.selectLanguage {
+  margin: 2px;
+  background: rgb(0, 91, 140);
+}
 .fundo-lista {
   background: rgb(0, 48, 73);
 }
